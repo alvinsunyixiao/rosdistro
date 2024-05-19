@@ -31,8 +31,10 @@ import yaml
 
 from .apk import apk_base_url
 from .deb import deb_base_url
+from .layer_index import layer_index_url
 from .pacman import pacman_base_url
 from .rpm import rpm_base_url
+from .rpm import rpm_mirrorlist_url
 
 
 DEFAULT_CONFIG_PATH = os.path.join(
@@ -49,6 +51,10 @@ def load_deb_base_url(loader, node):
     return deb_base_url(base_url, comp)
 
 
+def load_layer_index_url(loader, node):
+    return layer_index_url(node.value)
+
+
 def load_pacman_base_url(loader, node):
     base_url, repo_name = node.value.rsplit(' ', 1)
     return pacman_base_url(base_url, repo_name)
@@ -56,6 +62,10 @@ def load_pacman_base_url(loader, node):
 
 def load_rpm_base_url(loader, node):
     return rpm_base_url(node.value)
+
+
+def load_rpm_mirrorlist_url(loader, node):
+    return rpm_mirrorlist_url(node.value)
 
 
 def load_regex(loader, node):
@@ -67,9 +77,13 @@ yaml.add_constructor(
 yaml.add_constructor(
     u'!deb_base_url', load_deb_base_url, Loader=yaml.SafeLoader)
 yaml.add_constructor(
+    u'!layer_index_url', load_layer_index_url, Loader=yaml.SafeLoader)
+yaml.add_constructor(
     u'!pacman_base_url', load_pacman_base_url, Loader=yaml.SafeLoader)
 yaml.add_constructor(
     u'!rpm_base_url', load_rpm_base_url, Loader=yaml.SafeLoader)
+yaml.add_constructor(
+    u'!rpm_mirrorlist_url', load_rpm_mirrorlist_url, Loader=yaml.SafeLoader)
 yaml.add_constructor(
     u'!regular_expression', load_regex, Loader=yaml.SafeLoader)
 
